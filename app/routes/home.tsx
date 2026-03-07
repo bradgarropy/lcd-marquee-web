@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react"
-import {Form, useActionData} from "react-router"
+import {Form, useActionData, useNavigation} from "react-router"
 
 import {messageSchema, publish} from "~/mqtt.server"
 
@@ -23,24 +23,35 @@ const meta = () => {
 
 const Home = () => {
     const actionData = useActionData<typeof action>()
+    const navigation = useNavigation()
     const [message, setMessage] = useState("")
     const [twitter, setTwitter] = useState("")
+    const [showSuccess, setShowSuccess] = useState(false)
+
+    const isSubmitting = navigation.state === "submitting"
 
     useEffect(() => {
         if (actionData?.success) {
             setMessage("")
             setTwitter("")
+            setShowSuccess(true)
+
+            const timeout = setTimeout(() => {
+                setShowSuccess(false)
+            }, 3000)
+
+            return () => clearTimeout(timeout)
         }
     }, [actionData])
 
-    const isDisabled = !message || !twitter
+    const isDisabled = !message || !twitter || isSubmitting
 
     return (
         <div className="flex min-h-screen items-center justify-center">
             <Form method="post" className="flex flex-col gap-4">
-                {actionData?.success && (
-                    <p className="text-green-600">Message sent!</p>
-                )}
+                <p className="h-6 text-green-600">
+                    {showSuccess && "Message sent!"}
+                </p>
 
                 <div className="flex flex-col">
                     <label htmlFor="message">Message</label>
@@ -73,7 +84,7 @@ const Home = () => {
                     disabled={isDisabled}
                     className="cursor-pointer bg-black text-white px-4 py-2 hover:bg-gray-800 disabled:cursor-not-allowed disabled:bg-gray-400"
                 >
-                    Send
+                    {isSubmitting ? "Sending..." : "Send"}
                 </button>
             </Form>
         </div>
