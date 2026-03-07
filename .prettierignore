@@ -1,0 +1,13 @@
+# dependencies
+/node_modules
+
+# build
+/.cache
+/build
+/public/build
+
+# test
+/coverage
+
+# secrets
+.env*
