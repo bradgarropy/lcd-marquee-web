@@ -1,16 +1,15 @@
 import {useEffect, useState} from "react"
 import {Form, useActionData, useNavigation} from "react-router"
 
-// TODO: Re-enable MQTT functionality after configuring Cloudflare env vars
-// import {messageSchema, publish} from "~/mqtt.server"
+import {messageSchema, publish} from "~/mqtt.server"
+
 import type {Route} from "./+types/home"
 
-const action = async ({request}: Route.ActionArgs) => {
+const action = async ({request, context}: Route.ActionArgs) => {
     const formData = await request.formData()
-    // TODO: Re-enable MQTT functionality
-    // const message = messageSchema.parse(Object.fromEntries(formData))
-    // await publish(message)
-    console.log("Form submitted:", Object.fromEntries(formData))
+    const message = messageSchema.parse(Object.fromEntries(formData))
+
+    await publish(message, context.cloudflare.env)
 
     return {success: true}
 }

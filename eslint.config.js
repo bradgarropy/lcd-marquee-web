@@ -1,8 +1,10 @@
-import config from "@bradgarropy/eslint-config"
+import {fileURLToPath} from "node:url"
 
-export default [
-    {
-        ignores: [".react-router/**"],
-    },
-    ...config,
-]
+import base from "@bradgarropy/eslint-config"
+import {includeIgnoreFile} from "@eslint/compat"
+
+const gitignorePath = fileURLToPath(new URL(".gitignore", import.meta.url))
+
+const config = [includeIgnoreFile(gitignorePath), ...base]
+
+export default config

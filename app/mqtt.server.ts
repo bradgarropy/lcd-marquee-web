@@ -1,8 +1,6 @@
 import mqtt from "mqtt"
 import {z} from "zod"
 
-import {env} from "~/env.server"
-
 const TOPIC = "lcd-marquee/messages"
 
 const messageSchema = z.object({
@@ -12,7 +10,7 @@ const messageSchema = z.object({
 
 type Message = z.infer<typeof messageSchema>
 
-const publish = async (data: Message): Promise<void> => {
+const publish = async (data: Message, env: Env): Promise<void> => {
     const client = await mqtt.connectAsync(env.MQTT_URL, {
         username: env.MQTT_USERNAME,
         password: env.MQTT_PASSWORD,
