@@ -22,3 +22,4 @@ const publish = async (data: Message, env: Env): Promise<void> => {
 }
 
 export {messageSchema, publish}
+export type {Message}

@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react"
 import {Form, useActionData, useNavigation} from "react-router"
 
+import {useMqtt} from "~/hooks/useMqtt"
 import {messageSchema, publish} from "~/mqtt.server"
 
 import type {Route} from "./+types/home"
@@ -29,6 +30,10 @@ const Home = () => {
     const [showSuccess, setShowSuccess] = useState(false)
 
     const isSubmitting = navigation.state !== "idle"
+
+    useMqtt({
+        onMessage: msg => console.log("[MQTT Message]", msg),
+    })
 
     useEffect(() => {
         if (actionData?.success) {

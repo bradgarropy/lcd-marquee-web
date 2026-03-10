@@ -6,4 +6,18 @@
     "assets": {
         "directory": "./build/client",
     },
+    "durable_objects": {
+        "bindings": [
+            {
+                "name": "MQTT",
+                "class_name": "Mqtt",
+            },
+        ],
+    },
+    "migrations": [
+        {
+            "tag": "v1",
+            "new_classes": ["Mqtt"],
+        },
+    ],
 }
