@@ -3,6 +3,9 @@ import {renderToReadableStream} from "react-dom/server"
 import type {EntryContext} from "react-router"
 import {ServerRouter} from "react-router"
 
+// Export Durable Objects for Cloudflare Workers
+export {Mqtt} from "~/durable-objects/mqtt"
+
 export default async function handleRequest(
     request: Request,
     responseStatusCode: number,

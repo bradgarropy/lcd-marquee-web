@@ -23,4 +23,5 @@ const publish = async (data: Message): Promise<void> => {
     await client.endAsync()
 }
 
+export type {Message}
 export {messageSchema, publish}
