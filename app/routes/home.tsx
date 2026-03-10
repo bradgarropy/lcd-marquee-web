@@ -5,11 +5,11 @@ import {messageSchema, publish} from "~/mqtt.server"
 
 import type {Route} from "./+types/home"
 
-const action = async ({request}: Route.ActionArgs) => {
+const action = async ({request, context}: Route.ActionArgs) => {
     const formData = await request.formData()
     const message = messageSchema.parse(Object.fromEntries(formData))
 
-    await publish(message)
+    await publish(message, context.cloudflare.env)
 
     return {success: true}
 }

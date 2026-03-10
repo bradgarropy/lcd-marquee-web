@@ -1,0 +1,9 @@
+{
+    "name": "lcd-marquee",
+    "main": "./workers/app.ts",
+    "compatibility_date": "2025-03-09",
+    "compatibility_flags": ["nodejs_compat"],
+    "assets": {
+        "directory": "./build/client",
+    },
+}
