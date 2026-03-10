@@ -1,6 +1,6 @@
 import {useEffect, useRef, useState} from "react"
 
-import {type Message, messageSchema} from "~/mqtt.server"
+import {type Message, messageSchema} from "~/schemas/message"
 
 interface UseMqttOptions {
     onMessage?: (message: Message) => void

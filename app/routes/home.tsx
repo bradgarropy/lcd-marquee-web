@@ -2,7 +2,8 @@ import {useEffect, useState} from "react"
 import {Form, useActionData, useNavigation} from "react-router"
 
 import {useMqtt} from "~/hooks/useMqtt"
-import {messageSchema, publish} from "~/mqtt.server"
+import {publish} from "~/mqtt.server"
+import {messageSchema} from "~/schemas/message"
 
 import type {Route} from "./+types/home"
 
