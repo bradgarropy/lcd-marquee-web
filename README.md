@@ -14,43 +14,38 @@ The display uses the **LCD Dot Matrix** font which replicates the 5x8 dot matrix
 | -------------- | ------ | ------------------------------------------------------------------------------ | ------------ |
 | LCD Dot Matrix | OTF    | [FontStruct](https://fontstruct.com/fontstructions/show/933512/lcd_dot_matrix) | CC BY-SA 3.0 |
 
-The `©` character (U+00A9 COPYRIGHT SIGN) renders as a filled dot matrix block, used to display inactive LCD pixels.
+A dedicated solid block glyph from the LCD Dot Matrix font is used to represent inactive LCD pixels.
 
 ### Components
 
 #### `<LCD>`
 
-Container component that renders the LCD display with two rows of dot matrix characters.
+Renders the LCD display with two rows of dot matrix characters. Accepts a queue of messages and scrolls them one at a time as a marquee (right to left, one character per tick).
 
 ```tsx
 import {LCD} from "~/components/LCD"
-;<LCD>{/* Content goes here */}</LCD>
+
+const [messages, setMessages] = useState<Message[]>([])
+
+const handleMessageComplete = () => {
+    setMessages(prev => prev.slice(1))
+}
+
+;<LCD messages={messages} onMessageComplete={handleMessageComplete} />
 ```
 
-#### `<Marquee>`
+| Prop                | Type         | Description                                               |
+| ------------------- | ------------ | --------------------------------------------------------- |
+| `messages`          | `Message[]`  | Queue of messages to display                              |
+| `onMessageComplete` | `() => void` | Optional callback fired when a message finishes scrolling |
 
-Scrolling text component for LCD display content. Text scrolls from right to left, one character at a time.
-
-```tsx
-import {Marquee} from "~/components/Marquee"
-;<Marquee
-    line1="Hello World"
-    line2="@username"
-    onComplete={() => console.log("Animation finished")}
-/>
-```
-
-| Prop         | Type         | Description                                |
-| ------------ | ------------ | ------------------------------------------ |
-| `line1`      | `string`     | Text for the first line                    |
-| `line2`      | `string`     | Text for the second line                   |
-| `onComplete` | `() => void` | Callback fired when marquee animation ends |
+Each `Message` has the shape `{ message: string, twitter: string }` (see `~/schemas/message`).
 
 ### Hooks
 
 #### `useCharWidth`
 
-Returns the pixel width of a single character in the LCD font. Used internally by `<LCD>` and `<Marquee>` for layout calculations.
+Returns the pixel width of a single character in the LCD font. Used internally by `<LCD>` for layout calculations.
 
 ```tsx
 import {useCharWidth} from "~/hooks/useCharWidth"

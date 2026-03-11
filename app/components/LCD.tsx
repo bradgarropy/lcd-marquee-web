@@ -1,11 +1,7 @@
 import {useEffect, useRef, useState} from "react"
 
 import {useCharWidth} from "~/hooks/useCharWidth"
-
-interface Message {
-    message: string
-    twitter: string
-}
+import type {Message} from "~/schemas/message"
 
 interface LCDProps {
     messages: Message[]
@@ -61,6 +57,8 @@ const LCD = ({messages, onMessageComplete}: LCDProps) => {
         // Total steps: scroll from off-screen right to fully off-screen left
         const totalSteps = charCount + maxLength + 2
 
+        let timeoutId: ReturnType<typeof setTimeout> | null = null
+
         const interval = setInterval(() => {
             setOffset(prev => {
                 const next = prev + 1
@@ -68,7 +66,7 @@ const LCD = ({messages, onMessageComplete}: LCDProps) => {
                 if (next > totalSteps) {
                     clearInterval(interval)
                     // Defer the callback to avoid updating parent state during render
-                    setTimeout(() => onMessageComplete?.(), 0)
+                    timeoutId = setTimeout(() => onMessageComplete?.(), 0)
                     return prev
                 }
 
@@ -76,7 +74,12 @@ const LCD = ({messages, onMessageComplete}: LCDProps) => {
             })
         }, 200)
 
-        return () => clearInterval(interval)
+        return () => {
+            clearInterval(interval)
+            if (timeoutId !== null) {
+                clearTimeout(timeoutId)
+            }
+        }
     }, [currentMessage, charCount, onMessageComplete])
 
     const emptyLine = BLOCK_CHAR.repeat(charCount)
