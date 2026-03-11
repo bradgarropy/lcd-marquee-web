@@ -62,7 +62,10 @@ const useMqtt = (options: UseMqttOptions = {}) => {
             if (reconnectTimeout) {
                 clearTimeout(reconnectTimeout)
             }
-            ws?.close()
+            if (ws) {
+                ws.close()
+                ws = null
+            }
         }
     }, [])
 

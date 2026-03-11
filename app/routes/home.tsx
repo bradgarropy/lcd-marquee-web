@@ -2,7 +2,6 @@ import {useCallback, useEffect, useState} from "react"
 import {Form, useActionData, useNavigation} from "react-router"
 
 import {LCD} from "~/components/LCD"
-import {Marquee} from "~/components/Marquee"
 import {useMqtt} from "~/hooks/useMqtt"
 import {publish} from "~/mqtt.server"
 import {type Message, messageSchema} from "~/schemas/message"
@@ -34,22 +33,21 @@ const Home = () => {
     const [message, setMessage] = useState("")
     const [twitter, setTwitter] = useState("")
     const [showSuccess, setShowSuccess] = useState(false)
-    const [messageQueue, setMessageQueue] = useState<Message[]>([])
+    const [messages, setMessages] = useState<Message[]>([])
 
     const isSubmitting = navigation.state !== "idle"
-    const currentMessage = messageQueue[0]
 
     const handleMqttMessage = useCallback((msg: Message) => {
-        setMessageQueue(prev => [...prev, msg])
+        setMessages(prev => [...prev, msg])
+    }, [])
+
+    const handleMessageComplete = useCallback(() => {
+        setMessages(prev => prev.slice(1))
     }, [])
 
     useMqtt({
         onMessage: handleMqttMessage,
     })
-
-    const handleMarqueeComplete = useCallback(() => {
-        setMessageQueue(prev => prev.slice(1))
-    }, [])
 
     useEffect(() => {
         if (actionData?.success) {
@@ -138,15 +136,10 @@ const Home = () => {
 
             {/* LCD Screen Section - solid blue-600 */}
             <div className="h-1/2 flex items-center p-6 bg-blue-600">
-                <LCD>
-                    {currentMessage && (
-                        <Marquee
-                            line1={currentMessage.message}
-                            line2={currentMessage.twitter}
-                            onComplete={handleMarqueeComplete}
-                        />
-                    )}
-                </LCD>
+                <LCD
+                    messages={messages}
+                    onMessageComplete={handleMessageComplete}
+                />
             </div>
         </div>
     )
