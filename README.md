@@ -1,87 +1,67 @@
-# Welcome to React Router!
+# LCD Marquee Web
 
-A modern, production-ready template for building full-stack React applications using React Router.
+A web application that simulates an LCD1602 display with scrolling marquee messages, powered by React Router and MQTT.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
+## LCD Display
 
-## Features
+This application simulates an [LCD1602 display module](https://www.sunfounder.com/products/i2c-lcd1602-module) - a 16x2 character LCD with blue backlight commonly used in electronics projects.
 
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
+### Font
 
-## Getting Started
+The display uses the **LCD Dot Matrix** font which replicates the 5x8 dot matrix character set of the [Hitachi HD44780](https://en.wikipedia.org/wiki/Hitachi_HD44780_LCD_controller) LCD controller.
 
-### Installation
+| Font           | Format | Source                                                                         | License      |
+| -------------- | ------ | ------------------------------------------------------------------------------ | ------------ |
+| LCD Dot Matrix | OTF    | [FontStruct](https://fontstruct.com/fontstructions/show/933512/lcd_dot_matrix) | CC BY-SA 3.0 |
 
-Install the dependencies:
+The `©` character (U+00A9 COPYRIGHT SIGN) renders as a filled dot matrix block, used to display inactive LCD pixels.
 
-```bash
-npm install
+### Components
+
+#### `<LCD>`
+
+Container component that renders the LCD display with two rows of dot matrix characters.
+
+```tsx
+import {LCD} from "~/components/LCD"
+;<LCD>{/* Content goes here */}</LCD>
 ```
 
-### Development
+#### `<Marquee>`
 
-Start the development server with HMR:
+Scrolling text component for LCD display content. Text scrolls from right to left, one character at a time.
 
-```bash
-npm run dev
+```tsx
+import {Marquee} from "~/components/Marquee"
+;<Marquee
+    line1="Hello World"
+    line2="@username"
+    onComplete={() => console.log("Animation finished")}
+/>
 ```
 
-Your application will be available at `http://localhost:3000`.
+| Prop         | Type         | Description                                |
+| ------------ | ------------ | ------------------------------------------ |
+| `line1`      | `string`     | Text for the first line                    |
+| `line2`      | `string`     | Text for the second line                   |
+| `onComplete` | `() => void` | Callback fired when marquee animation ends |
 
-## Building for Production
+### Hooks
 
-Create a production build:
+#### `useCharWidth`
 
-```bash
-npm run build
+Returns the pixel width of a single character in the LCD font. Used internally by `<LCD>` and `<Marquee>` for layout calculations.
+
+```tsx
+import {useCharWidth} from "~/hooks/useCharWidth"
+
+const charWidth = useCharWidth() // e.g., 27
 ```
 
-## Deployment
+### CSS Custom Properties
 
-### Docker Deployment
-
-To build and run using Docker:
-
-```bash
-docker build -t my-app .
-
-# Run the container
-docker run -p 3000:3000 my-app
-```
-
-The containerized application can be deployed to any platform that supports Docker, including:
-
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
-
-### DIY Deployment
-
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
-
-```
-├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
-├── build/
-│   ├── client/    # Static assets
-│   └── server/    # Server-side code
-```
-
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
+The LCD font can be referenced via the `--font-lcd` CSS variable defined in `@theme`, or using the Tailwind class `font-lcd`.
 
 ---
 
-Built with ❤️ using React Router.
+Built with React Router.
