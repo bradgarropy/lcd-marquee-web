@@ -69,7 +69,7 @@ const LCD = ({messages, onMessageComplete}: LCDProps) => {
     const translateX = (CHAR_COUNT + 1 - offset) * charWidth
 
     return (
-        <div className="bg-green-700 p-2 rounded grid grid-cols-[auto_auto_auto] grid-rows-[auto_auto_auto] gap-1 items-center justify-items-center text-4xl font-lcd">
+        <div className="bg-green-700 p-2 rounded grid grid-cols-[auto_auto_auto] grid-rows-[auto_auto_auto] gap-1 items-center justify-items-center text-4xl font-lcd shadow-xl/40">
             {/* Top-left corner */}
             <div className="w-5 h-5 rounded-full bg-white border-4 border-yellow-500"></div>
             {/* Top-center (empty) */}
