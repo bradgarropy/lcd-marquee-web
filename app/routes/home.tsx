@@ -66,81 +66,71 @@ const Home = () => {
     const isDisabled = !message || !twitter
 
     return (
-        <div className="flex h-screen flex-col">
-            {/* Form Section - gradient from white to blue-600 */}
-            <div className="h-1/2 bg-linear-to-b/oklch from-white from-50% to-blue-600 p-6">
-                <Form
-                    method="post"
-                    aria-busy={isSubmitting}
-                    className="max-w-md mx-auto"
+        <div className="flex h-screen flex-col items-center justify-center gap-8 bg-white">
+            {/* Form Section */}
+            <Form
+                method="post"
+                aria-busy={isSubmitting}
+                className="max-w-md w-full"
+            >
+                <p
+                    role="status"
+                    aria-live="polite"
+                    aria-atomic="true"
+                    className="mb-4 min-h-6 text-green-600"
                 >
-                    <p
-                        role="status"
-                        aria-live="polite"
-                        aria-atomic="true"
-                        className="mb-4 min-h-6 text-green-600"
+                    {showSuccess && "Message sent!"}
+                </p>
+
+                <fieldset
+                    disabled={isSubmitting}
+                    className="m-0 flex flex-col gap-4 border-0 p-0"
+                >
+                    <div className="flex flex-col">
+                        <label htmlFor="message" className="text-gray-800 mb-1">
+                            Message
+                        </label>
+                        <input
+                            type="text"
+                            id="message"
+                            name="message"
+                            className="w-full border border-gray-300 bg-white text-gray-900 px-4 py-2 rounded focus:border-blue-500 focus:outline-none"
+                            required
+                            value={message}
+                            onChange={e => setMessage(e.target.value)}
+                        />
+                    </div>
+
+                    <div className="flex flex-col">
+                        <label htmlFor="twitter" className="text-gray-800 mb-1">
+                            Twitter Handle
+                        </label>
+                        <input
+                            type="text"
+                            id="twitter"
+                            name="twitter"
+                            className="w-full border border-gray-300 bg-white text-gray-900 px-4 py-2 rounded focus:border-blue-500 focus:outline-none"
+                            required
+                            value={twitter}
+                            onChange={e => setTwitter(e.target.value)}
+                        />
+                    </div>
+
+                    <button
+                        type="submit"
+                        disabled={isDisabled}
+                        className="cursor-pointer bg-blue-800 text-white px-4 py-2 rounded hover:bg-blue-900 disabled:cursor-not-allowed disabled:bg-gray-400"
                     >
-                        {showSuccess && "Message sent!"}
-                    </p>
+                        {isSubmitting ? "Sending..." : "Send"}
+                    </button>
+                </fieldset>
+            </Form>
 
-                    <fieldset
-                        disabled={isSubmitting}
-                        className="m-0 flex flex-col gap-4 border-0 p-0"
-                    >
-                        <div className="flex flex-col">
-                            <label
-                                htmlFor="message"
-                                className="text-gray-800 mb-1"
-                            >
-                                Message
-                            </label>
-                            <input
-                                type="text"
-                                id="message"
-                                name="message"
-                                className="w-full border border-gray-300 bg-white text-gray-900 px-4 py-2 rounded focus:border-blue-500 focus:outline-none"
-                                required
-                                value={message}
-                                onChange={e => setMessage(e.target.value)}
-                            />
-                        </div>
-
-                        <div className="flex flex-col">
-                            <label
-                                htmlFor="twitter"
-                                className="text-gray-800 mb-1"
-                            >
-                                Twitter Handle
-                            </label>
-                            <input
-                                type="text"
-                                id="twitter"
-                                name="twitter"
-                                className="w-full border border-gray-300 bg-white text-gray-900 px-4 py-2 rounded focus:border-blue-500 focus:outline-none"
-                                required
-                                value={twitter}
-                                onChange={e => setTwitter(e.target.value)}
-                            />
-                        </div>
-
-                        <button
-                            type="submit"
-                            disabled={isDisabled}
-                            className="cursor-pointer bg-blue-800 text-white px-4 py-2 rounded hover:bg-blue-900 disabled:cursor-not-allowed disabled:bg-gray-400"
-                        >
-                            {isSubmitting ? "Sending..." : "Send"}
-                        </button>
-                    </fieldset>
-                </Form>
-            </div>
-
-            {/* LCD Screen Section - solid blue-600 */}
-            <div className="h-1/2 flex items-center p-6 bg-blue-600">
-                <LCD
-                    messages={messages}
-                    onMessageComplete={handleMessageComplete}
-                />
-            </div>
+            {/* LCD Screen */}
+            <LCD
+                messages={messages}
+                onMessageComplete={handleMessageComplete}
+            />
         </div>
     )
 }

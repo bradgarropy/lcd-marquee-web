@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from "react"
+import {useEffect, useState} from "react"
 
 import {useCharWidth} from "~/hooks/useCharWidth"
 import type {Message} from "~/schemas/message"
@@ -12,32 +12,15 @@ interface LCDProps {
 // U+00A9 (COPYRIGHT SIGN) renders as filled dot matrix block in LCD Dot Matrix font
 const BLOCK_CHAR = "©"
 
+// Fixed 16x2 LCD display like a real LCD module
+const CHAR_COUNT = 16
+
 const LCD = ({messages, onMessageComplete}: LCDProps) => {
-    const containerRef = useRef<HTMLDivElement>(null)
     const charWidth = useCharWidth()
-    const [charCount, setCharCount] = useState(40)
     const [offset, setOffset] = useState(0)
 
     // Always work with the first message in the queue
     const currentMessage = messages[0]
-
-    // Calculate how many characters fit in the container
-    useEffect(() => {
-        const updateCharCount = () => {
-            if (!containerRef.current || charWidth === 0) {
-                return
-            }
-
-            const containerWidth = containerRef.current.clientWidth
-            const wholeChars = Math.floor(containerWidth / charWidth)
-            setCharCount(wholeChars)
-        }
-
-        updateCharCount()
-
-        window.addEventListener("resize", updateCharCount)
-        return () => window.removeEventListener("resize", updateCharCount)
-    }, [charWidth])
 
     // Reset offset when the current message changes
     useEffect(() => {
@@ -46,7 +29,7 @@ const LCD = ({messages, onMessageComplete}: LCDProps) => {
 
     // Run the scrolling animation
     useEffect(() => {
-        if (!currentMessage || charCount === 0) {
+        if (!currentMessage) {
             return
         }
 
@@ -55,7 +38,7 @@ const LCD = ({messages, onMessageComplete}: LCDProps) => {
             currentMessage.twitter.length,
         )
         // Total steps: scroll from off-screen right to fully off-screen left
-        const totalSteps = charCount + maxLength + 2
+        const totalSteps = CHAR_COUNT + maxLength + 2
 
         let timeoutId: ReturnType<typeof setTimeout> | null = null
 
@@ -80,41 +63,52 @@ const LCD = ({messages, onMessageComplete}: LCDProps) => {
                 clearTimeout(timeoutId)
             }
         }
-    }, [currentMessage, charCount, onMessageComplete])
+    }, [currentMessage, onMessageComplete])
 
-    const emptyLine = BLOCK_CHAR.repeat(charCount)
-    const translateX = (charCount + 1 - offset) * charWidth
+    const emptyLine = BLOCK_CHAR.repeat(CHAR_COUNT)
+    const translateX = (CHAR_COUNT + 1 - offset) * charWidth
 
     return (
-        <div
-            ref={containerRef}
-            className="w-full flex items-center justify-center text-4xl font-lcd"
-        >
-            <div className="relative leading-none overflow-x-clip">
-                {/* Background block characters */}
-                <div className="text-blue-950 grid grid-rows-2 gap-1">
-                    <div>{emptyLine}</div>
-                    <div>{emptyLine}</div>
-                </div>
+        <div className="bg-green-700 p-2 rounded grid grid-cols-[auto_auto_auto] grid-rows-[auto_auto_auto] gap-1 items-center justify-items-center text-4xl font-lcd">
+            {/* Top-left corner */}
+            <div className="w-5 h-5 rounded-full bg-white border-4 border-yellow-500"></div>
+            {/* Top-center (empty) */}
+            <div></div>
+            {/* Top-right corner */}
+            <div className="w-5 h-5 rounded-full bg-white border-4 border-yellow-500"></div>
 
-                {/* Scrolling message */}
-                {currentMessage && (
-                    <div className="absolute inset-0 grid grid-rows-2 gap-1">
+            {/* Middle-left (empty) */}
+            <div></div>
+            {/* Center - LCD display */}
+            <div className="border-12 border-black rounded p-2 bg-blue-600">
+                {/* Background block characters */}
+                <div className="relative text-blue-950 overflow-hidden">
+                    <p>{emptyLine}</p>
+                    <p>{emptyLine}</p>
+
+                    {/* Scrolling message */}
+                    {currentMessage && (
                         <div
-                            className="whitespace-nowrap text-white leading-none"
-                            style={{transform: `translateX(${translateX}px)`}}
+                            className="absolute inset-0 whitespace-nowrap text-white"
+                            style={{
+                                transform: `translateX(${translateX}px)`,
+                            }}
                         >
-                            {currentMessage.message}
+                            <p>{currentMessage.message}</p>
+                            <p>{currentMessage.twitter}</p>
                         </div>
-                        <div
-                            className="whitespace-nowrap text-white leading-none"
-                            style={{transform: `translateX(${translateX}px)`}}
-                        >
-                            {currentMessage.twitter}
-                        </div>
-                    </div>
-                )}
+                    )}
+                </div>
             </div>
+            {/* Middle-right (empty) */}
+            <div></div>
+
+            {/* Bottom-left corner */}
+            <div className="w-5 h-5 rounded-full bg-white border-4 border-yellow-500"></div>
+            {/* Bottom-center (empty) */}
+            <div></div>
+            {/* Bottom-right corner */}
+            <div className="w-5 h-5 rounded-full bg-white border-4 border-yellow-500"></div>
         </div>
     )
 }
