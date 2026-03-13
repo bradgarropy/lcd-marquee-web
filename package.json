@@ -1,8 +1,20 @@
 {
     "name": "lcd-marquee",
-    "version": "0.0.1",
+    "description": "🟦 lcd marquee",
+    "version": "1.0.0",
     "private": true,
     "type": "module",
+    "keywords": [
+        "typescript",
+        "react",
+        "eslint",
+        "prettier",
+        "cloudflare",
+        "react-router",
+        "tailwind",
+        "mqtt",
+        "zod"
+    ],
     "scripts": {
         "build": "react-router build",
         "dev": "react-router dev",
