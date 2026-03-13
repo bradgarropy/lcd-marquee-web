@@ -49,13 +49,13 @@ const LCD = ({messages, onMessageComplete}: LCDProps) => {
         }
 
         const interval = setInterval(() => {
-            setOffset(prev => prev + 1)
+            setOffset(prev => (prev < totalSteps ? prev + 1 : prev))
         }, 200)
 
         return () => {
             clearInterval(interval)
         }
-    }, [messageId, currentMessage, isComplete])
+    }, [messageId, currentMessage, isComplete, totalSteps])
 
     // Effect 2: Detect completion and notify parent (depends on offset)
     useEffect(() => {
@@ -63,7 +63,7 @@ const LCD = ({messages, onMessageComplete}: LCDProps) => {
             return
         }
 
-        if (offset > totalSteps) {
+        if (offset >= totalSteps) {
             setIsComplete(true)
             onMessageComplete?.()
         }
