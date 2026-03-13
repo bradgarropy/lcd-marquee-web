@@ -4,17 +4,13 @@ import {useFetcher} from "react-router"
 import {LCD, type MessageWithId} from "~/components/LCD"
 import {useMqtt} from "~/hooks/useMqtt"
 import {publish} from "~/mqtt.server"
-import {messageSchema} from "~/schemas/message"
 import type {Message} from "~/schemas/message"
+import {messageSchema} from "~/schemas/message"
 
 import type {Route} from "./+types/home"
 
 const action = async ({request, context}: Route.ActionArgs) => {
     const formData = await request.formData()
-    const twitter = formData.get("twitter") as string
-    if (!twitter.startsWith("@")) {
-        formData.set("twitter", `@${twitter}`)
-    }
     const message = messageSchema.parse(Object.fromEntries(formData))
 
     await publish(message, context.cloudflare.env)
