@@ -1,6 +1,6 @@
 # 🟦 lcd marquee - web
 
-A web application to send realtime messages to an LCD sitting on my desk.
+A web application to send real-time messages to an LCD sitting on my desk.
 
 🔗 https://lcd.bradgarropy.com
 
@@ -44,7 +44,7 @@ npm run dev
 
 ## Hardware
 
-If you're interested in the hardware side of things, check out the [lcd-marquee-pi][lcd-marquee-pi] repository for the python code that runs on a [Raspberry Pi 5][raspberry-pi] that powers the [LCD][lcd].
+If you're interested in the hardware side of things, check out the [lcd-marquee-pi][lcd-marquee-pi] repository for the Python code that runs on a [Raspberry Pi 5][raspberry-pi] that powers the [LCD][lcd].
 
 [lcd-marquee-pi]: https://github.com/bradgarropy/lcd-marquee-pi
 [raspberry-pi]: https://raspberrypi.com/products/raspberry-pi-5
