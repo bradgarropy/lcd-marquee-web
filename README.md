@@ -1,62 +1,60 @@
-# LCD Marquee Web
+# 🟦 lcd marquee - web
 
-A web application that simulates an LCD1602 display with scrolling marquee messages, powered by React Router and MQTT.
+A web application to send real-time messages to an LCD sitting on my desk.
 
-## LCD Display
+🔗 https://lcd.bradgarropy.com
 
-This application simulates an [LCD1602 display module](https://www.sunfounder.com/products/i2c-lcd1602-module) - a 16x2 character LCD with blue backlight commonly used in electronics projects.
+![lcd marquee][lcd-marquee]
 
-### Font
+## Tech Stack
 
-The display uses the **LCD Dot Matrix** font which replicates the 5x8 dot matrix character set of the [Hitachi HD44780](https://en.wikipedia.org/wiki/Hitachi_HD44780_LCD_controller) LCD controller.
+- [React Router][react-router]
+- [Vite][vite]
+- [Tailwind][tailwind]
+- [Zod][zod]
+- [Cloudflare Workers][cloudflare-workers]
+- [HiveMQ][hivemq]
+- [LCD Dot Matrix][lcd-dot-matrix]
 
-| Font           | Format | Source                                                                         | License      |
-| -------------- | ------ | ------------------------------------------------------------------------------ | ------------ |
-| LCD Dot Matrix | OTF    | [FontStruct](https://fontstruct.com/fontstructions/show/933512/lcd_dot_matrix) | CC BY-SA 3.0 |
+## Development
 
-A dedicated solid block glyph from the LCD Dot Matrix font is used to represent inactive LCD pixels.
+Clone the repository.
 
-### Components
-
-#### `<LCD>`
-
-Renders the LCD display with two rows of dot matrix characters. Accepts a queue of messages and scrolls them one at a time as a marquee (right to left, one character per tick).
-
-```tsx
-import {LCD} from "~/components/LCD"
-
-const [messages, setMessages] = useState<Message[]>([])
-
-const handleMessageComplete = () => {
-    setMessages(prev => prev.slice(1))
-}
-
-;<LCD messages={messages} onMessageComplete={handleMessageComplete} />
+```zsh
+git clone https://github.com/bradgarropy/lcd-marquee-web.git
 ```
 
-| Prop                | Type         | Description                                               |
-| ------------------- | ------------ | --------------------------------------------------------- |
-| `messages`          | `Message[]`  | Queue of messages to display                              |
-| `onMessageComplete` | `() => void` | Optional callback fired when a message finishes scrolling |
+Install dependencies.
 
-Each `Message` has the shape `{ message: string, twitter: string }` (see `~/schemas/message`).
-
-### Hooks
-
-#### `useCharWidth`
-
-Returns the pixel width of a single character in the LCD font. Used internally by `<LCD>` for layout calculations.
-
-```tsx
-import {useCharWidth} from "~/hooks/useCharWidth"
-
-const charWidth = useCharWidth() // e.g., 27
+```zsh
+cd lcd-marquee-web
+npm install
 ```
 
-### CSS Custom Properties
+Create a `.env` file based on `.env.example` and fill in your MQTT credentials.
 
-The LCD font can be referenced via the `--font-lcd` CSS variable defined in `@theme`, or using the Tailwind class `font-lcd`.
+```zsh
+cp .env.example .env
+```
 
----
+Start the development server.
 
-Built with React Router.
+```zsh
+npm run dev
+```
+
+## Hardware
+
+If you're interested in the hardware side of things, check out the [lcd-marquee-pi][lcd-marquee-pi] repository for the Python code that runs on a [Raspberry Pi 5][raspberry-pi] that powers the [LCD][lcd].
+
+[lcd-marquee-pi]: https://github.com/bradgarropy/lcd-marquee-pi
+[raspberry-pi]: https://raspberrypi.com/products/raspberry-pi-5
+[lcd]: https://sunfounder.com/products/i2c-lcd1602-module
+[lcd-marquee]: images/lcd-marquee.png
+[react-router]: https://reactrouter.com
+[tailwind]: https://tailwindcss.com
+[cloudflare-workers]: https://workers.cloudflare.com
+[hivemq]: https://hivemq.com
+[zod]: https://zod.dev
+[vite]: https://vite.dev
+[lcd-dot-matrix]: https://fontstruct.com/fontstructions/show/142810/lcd_dot_matrix
